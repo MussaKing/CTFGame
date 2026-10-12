@@ -1,0 +1,1 @@
+CTF{robots_txt_tells_everything}

@@ -1,0 +1,33 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<section class="hero">
+    <h1>Capture The Flag</h1>
+    <p class="muted">Решайте задания, находите флаги вида <code>CTF{...}</code> и поднимайтесь в рейтинге.</p>
+    <div class="stats">
+        <div><strong>@Model.ChallengeCount</strong><span>заданий</span></div>
+        <div><strong>@Model.PlayerCount</strong><span>игроков</span></div>
+        <div><strong>@Model.SolveCount</strong><span>решений</span></div>
+    </div>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn" asp-page="/Challenges/Index">К заданиям →</a>
+    }
+    else
+    {
+        <a class="btn" asp-page="/Account/Register">Начать игру →</a>
+    }
+</section>
+
+<section class="card">
+    <h2>Правила</h2>
+    <ul>
+        <li>Каждое задание содержит флаг. Найдите его и отправьте на странице задания.</li>
+        <li>За решение начисляются очки. При равенстве очков выше тот, кто набрал их раньше.</li>
+        <li>Не больше @CTFGame.Services.FlagService.MaxAttemptsPerMinute попыток в минуту — перебор не поможет.</li>
+        <li>Не атакуйте инфраструктуру платформы и не делитесь флагами.</li>
+    </ul>
+</section>

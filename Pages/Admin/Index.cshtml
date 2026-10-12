@@ -1,0 +1,40 @@
+@page
+@model CTFGame.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Админка";
+}
+
+<div class="page-head">
+    <h1>Управление заданиями</h1>
+    <a class="btn" asp-page="Edit">+ Новое задание</a>
+</div>
+
+<p class="muted">Игроков: @Model.PlayerCount · попыток сдачи: @Model.SubmissionCount (верных: @Model.CorrectCount)</p>
+
+<table class="table">
+    <thead>
+    <tr><th>Название</th><th>Категория</th><th>Очки</th><th>Решений</th><th>Статус</th><th></th></tr>
+    </thead>
+    <tbody>
+    @foreach (var c in Model.Challenges)
+    {
+        <tr>
+            <td><a asp-page="/Challenges/Details" asp-route-id="@c.Id">@c.Title</a></td>
+            <td>@c.Category</td>
+            <td>@c.Points</td>
+            <td>@c.Solves</td>
+            <td>@(c.IsVisible ? "Открыто" : "Скрыто")</td>
+            <td class="actions">
+                <a asp-page="Edit" asp-route-id="@c.Id">Изменить</a>
+                <form method="post" asp-page-handler="Toggle" asp-route-id="@c.Id" class="inline">
+                    <button type="submit" class="link">@(c.IsVisible ? "Скрыть" : "Открыть")</button>
+                </form>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@c.Id" class="inline"
+                      onsubmit="return confirm('Удалить задание и все его решения?');">
+                    <button type="submit" class="link danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

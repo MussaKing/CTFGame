@@ -1,0 +1,44 @@
+@page "{id:int?}"
+@model CTFGame.Pages.Admin.EditModel
+@{
+    ViewData["Title"] = Model.IsNew ? "Новое задание" : "Редактирование";
+}
+
+<p><a asp-page="Index">← К списку</a></p>
+
+<section class="card">
+    <h1>@ViewData["Title"]</h1>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="field-error"></div>
+
+        <label asp-for="Input.Title">Название</label>
+        <input asp-for="Input.Title" />
+        <span asp-validation-for="Input.Title" class="field-error"></span>
+
+        <label asp-for="Input.Category">Категория</label>
+        <input asp-for="Input.Category" list="categories" />
+        <datalist id="categories">
+            @foreach (var c in Model.KnownCategories)
+            {
+                <option value="@c"></option>
+            }
+        </datalist>
+        <span asp-validation-for="Input.Category" class="field-error"></span>
+
+        <label asp-for="Input.Points">Очки</label>
+        <input asp-for="Input.Points" />
+        <span asp-validation-for="Input.Points" class="field-error"></span>
+
+        <label asp-for="Input.Description">Описание (HTML)</label>
+        <textarea asp-for="Input.Description" rows="10"></textarea>
+        <span asp-validation-for="Input.Description" class="field-error"></span>
+
+        <label asp-for="Input.Flag">Флаг</label>
+        <input asp-for="Input.Flag" autocomplete="off" placeholder="@(Model.IsNew ? "CTF{...}" : "оставьте пустым, чтобы не менять")" />
+        <span asp-validation-for="Input.Flag" class="field-error"></span>
+
+        <label class="checkbox"><input asp-for="Input.IsVisible" /> Видно игрокам</label>
+
+        <button type="submit" class="btn">Сохранить</button>
+    </form>
+</section>

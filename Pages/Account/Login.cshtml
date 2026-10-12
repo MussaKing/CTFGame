@@ -1,0 +1,23 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<section class="card narrow">
+    <h1>Вход</h1>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="field-error"></div>
+        <label asp-for="Input.UserName">Имя пользователя</label>
+        <input asp-for="Input.UserName" autocomplete="username" />
+        <span asp-validation-for="Input.UserName" class="field-error"></span>
+
+        <label asp-for="Input.Password">Пароль</label>
+        <input asp-for="Input.Password" autocomplete="current-password" />
+        <span asp-validation-for="Input.Password" class="field-error"></span>
+
+        <input type="hidden" asp-for="ReturnUrl" />
+        <button type="submit" class="btn">Войти</button>
+    </form>
+    <p class="muted">Нет аккаунта? <a asp-page="Register">Зарегистрируйтесь</a></p>
+</section>

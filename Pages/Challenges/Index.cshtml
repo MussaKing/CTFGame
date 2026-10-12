@@ -1,0 +1,30 @@
+@page
+@model CTFGame.Pages.Challenges.IndexModel
+@{
+    ViewData["Title"] = "Задания";
+}
+
+<div class="page-head">
+    <h1>Задания</h1>
+    <div class="score">Ваш счёт: <strong>@Model.Score</strong> · решено @Model.SolvedCount из @Model.TotalCount</div>
+</div>
+
+@if (Model.TotalCount == 0)
+{
+    <p class="muted">Заданий пока нет.</p>
+}
+
+@foreach (var category in Model.Categories)
+{
+    <h2 class="category">@category.Key</h2>
+    <div class="grid">
+        @foreach (var c in category)
+        {
+            <a class="tile @(c.Solved ? "solved" : "")" asp-page="Details" asp-route-id="@c.Id">
+                <span class="tile-title">@c.Title</span>
+                <span class="tile-points">@c.Points</span>
+                <span class="tile-meta">@(c.Solved ? "✔ решено" : $"решений: {c.Solves}")</span>
+            </a>
+        }
+    </div>
+}

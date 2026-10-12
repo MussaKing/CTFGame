@@ -1,0 +1,49 @@
+@page "{id:int}"
+@model CTFGame.Pages.Challenges.DetailsModel
+@{
+    ViewData["Title"] = Model.Item.Title;
+}
+
+<p><a asp-page="Index">← Все задания</a></p>
+
+<section class="card">
+    <div class="page-head">
+        <h1>@Model.Item.Title</h1>
+        <div><span class="badge">@Model.Item.Category</span> <span class="badge points">@Model.Item.Points очков</span></div>
+    </div>
+
+    <div class="description">
+        @* Описание пишет администратор — HTML выводится без экранирования. *@
+        @Html.Raw(Model.Item.Description)
+    </div>
+
+    @if (Model.Solved)
+    {
+        <div class="alert success">Вы уже решили это задание ✔</div>
+    }
+    else
+    {
+        <form method="post" class="flag-form">
+            <input asp-for="Flag" placeholder="CTF{...}" autocomplete="off" spellcheck="false" />
+            <button type="submit" class="btn">Сдать флаг</button>
+        </form>
+        <span asp-validation-for="Flag" class="field-error"></span>
+    }
+</section>
+
+<section class="card">
+    <h2>Решили (@Model.SolveCount)</h2>
+    @if (Model.Solvers.Count == 0)
+    {
+        <p class="muted">Пока никто. Станьте первым!</p>
+    }
+    else
+    {
+        <ol class="solvers">
+            @foreach (var s in Model.Solvers)
+            {
+                <li>@s.UserName <span class="muted">@s.SolvedAt.ToLocalTime().ToString("dd.MM HH:mm:ss")</span></li>
+            }
+        </ol>
+    }
+</section>

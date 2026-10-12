@@ -1,0 +1,34 @@
+@page
+@model ScoreboardModel
+@{
+    ViewData["Title"] = "Рейтинг";
+    var place = 0;
+}
+
+<h1>Рейтинг</h1>
+
+@if (Model.Rows.Count == 0)
+{
+    <p class="muted">Пока никто не решил ни одного задания.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr><th>#</th><th>Игрок</th><th>Решено</th><th>Очки</th><th>Последнее решение</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var row in Model.Rows)
+        {
+            place++;
+            <tr class="@(row.UserName == User.Identity?.Name ? "me" : "")">
+                <td>@place</td>
+                <td>@row.UserName</td>
+                <td>@row.Solved</td>
+                <td><strong>@row.Score</strong></td>
+                <td class="muted">@row.LastSolve?.ToLocalTime().ToString("dd.MM HH:mm:ss")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
