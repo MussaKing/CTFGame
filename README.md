@@ -1,6 +1,6 @@
 # CTF Game
 
-Платформа для игры в Capture The Flag (формат Jeopardy) на ASP.NET Core 8 (Razor Pages) + EF Core + SQLite.
+Платформа для игры в Capture The Flag (формат Jeopardy) на ASP.NET Core 8 (Razor Pages) + EF Core + PostgreSQL, упакованная в Docker.
 
 ## Возможности
 
@@ -36,24 +36,51 @@
 
 Эндпоинты `/lab/*` для веб-заданий находятся в `Data/LabEndpoints.cs`.
 
-## Запуск
+## Запуск в Docker
 
-Нужен [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+Нужен [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ```bash
-dotnet run
+cp .env.example .env      # затем поменяйте пароли в .env
+docker compose up -d --build
 ```
 
-Приложение откроется на http://localhost:5080. База `ctf.db` создаётся автоматически.
+Сайт: http://localhost:5080. Поднимаются два контейнера:
+
+| Сервис | Что это | Данные |
+|---|---|---|
+| `db` | PostgreSQL 16, порт `127.0.0.1:5432` | volume `pgdata` |
+| `app` | сайт, порт `5080` → `8080` в контейнере | volume `dpkeys` (ключи cookie входа) |
+
+Таблицы создаются автоматически при первом старте сайта.
+
+| Команда | Действие |
+|---|---|
+| `docker compose logs -f app` | логи сайта |
+| `docker compose stop` | остановить, данные сохранятся |
+| `docker compose up -d --build` | пересобрать после изменения кода |
+| `docker compose down -v` | удалить контейнеры **вместе с базой** |
 
 ### Администратор
 
-При первом запуске создаётся пользователь `admin`. Если `Admin:Password` в `appsettings.json` пуст,
-пароль генерируется случайно и выводится в консоль. Задать свой пароль можно через переменную окружения:
+При первом запуске (в пустой базе) создаётся пользователь `admin`. Пароль берётся из `ADMIN_PASSWORD` в `.env`;
+если он пуст, генерируется случайно и печатается в логи: `docker compose logs app`.
+
+### Подключение к базе (DBeaver и т.п.)
+
+Host `localhost`, порт `5432`, база `ctfgame`, пользователь `ctf`, пароль — `POSTGRES_PASSWORD` из `.env`.
+
+## Запуск без Docker
+
+Нужен [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) и PostgreSQL. Проще всего поднять только базу из compose:
 
 ```bash
-Admin__Password=MyStrongPassword dotnet run
+docker compose up -d db
+dotnet run
 ```
+
+Строка подключения для разработки — в `appsettings.Development.json`. Перед этим остановите контейнер `app`,
+иначе порт 5080 будет занят.
 
 ## Структура
 
@@ -64,6 +91,8 @@ Admin__Password=MyStrongPassword dotnet run
 | `Services/FlagService.cs` | Хеширование и проверка флагов, лимит попыток |
 | `Pages/` | Razor Pages: аккаунт, задания, рейтинг, админка |
 | `wwwroot/` | Стили и файлы для веб-задания про `robots.txt` |
+| `Dockerfile`, `docker-compose.yml` | Образ сайта и запуск вместе с PostgreSQL |
+| `.env.example` | Шаблон настроек: пароли, порт, часовой пояс |
 
 ## Замечания
 
@@ -71,3 +100,5 @@ Admin__Password=MyStrongPassword dotnet run
 - Флаги демо-заданий есть в исходниках (`Data/DbInitializer.cs`, `wwwroot/s3cr3t-b4ckup`). Перед реальной игрой
   удалите демо-задания и создайте свои через админку.
 - Для продакшена запускайте за reverse proxy с HTTPS.
+- Схема создаётся через `EnsureCreated`, миграций нет. При изменении моделей базу нужно пересоздать
+  (`docker compose down -v`), все данные при этом пропадут.

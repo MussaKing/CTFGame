@@ -12,9 +12,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Регистронезависимое сравнение имён: «Admin» и «admin» — один и тот же пользователь.
+        modelBuilder.HasCollation("case_insensitive", locale: "und-u-ks-level2", provider: "icu", deterministic: false);
+
         modelBuilder.Entity<User>(e =>
         {
-            e.Property(u => u.UserName).UseCollation("NOCASE");
+            e.Property(u => u.UserName).UseCollation("case_insensitive");
             e.HasIndex(u => u.UserName).IsUnique();
         });
 

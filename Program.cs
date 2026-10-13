@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=ctf.db"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")
+                      ?? throw new InvalidOperationException("Не задана строка подключения ConnectionStrings:Default")));
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
