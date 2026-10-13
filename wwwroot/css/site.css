@@ -66,6 +66,17 @@ input:not([type=checkbox]), textarea {
 textarea { font-family: var(--mono); font-size: 14px; }
 input:focus, textarea:focus { outline: 2px solid var(--accent-dark); border-color: transparent; }
 form .btn { margin-top: 18px; }
+
+.password-field { position: relative; }
+.password-field input { padding-right: 42px; }
+.password-field input::-ms-reveal { display: none; }
+.password-toggle {
+    position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+    display: flex; padding: 6px; border: 0; border-radius: 4px;
+    background: none; color: var(--muted); cursor: pointer;
+}
+.password-toggle:hover, .password-toggle[aria-pressed="true"] { color: var(--text); }
+.password-toggle:focus-visible { outline: 2px solid var(--accent-dark); }
 .field-error { color: var(--danger); font-size: 14px; }
 .field-error ul { margin: 0; padding-left: 18px; }
 
