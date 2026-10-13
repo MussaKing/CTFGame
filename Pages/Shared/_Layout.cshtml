@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ViewData["Title"] — CTF Game</title>
+    <title>CTFGame</title>
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+    <meta name="theme-color" content="#0d1117" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" asp-page="/Index">CTF<span>::</span>Game</a>
+    <a class="brand" asp-page="/Index"><img src="~/favicon.svg" alt="" width="28" height="28" /><span>CTF<span class="sep">::</span>Game</span></a>
     <nav>
         <a asp-page="/Challenges/Index">Задания</a>
         <a asp-page="/Scoreboard">Рейтинг</a>

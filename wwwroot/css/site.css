@@ -34,8 +34,10 @@ footer.container { padding-top: 0; font-size: 14px; }
     display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
     padding: 12px 24px; background: var(--panel); border-bottom: 1px solid var(--border);
 }
-.brand { font-family: var(--mono); font-weight: 700; font-size: 20px; color: var(--text); }
-.brand span { color: var(--accent); }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-weight: 700; font-size: 20px; color: var(--text); }
+.brand:hover { text-decoration: none; }
+.brand img { display: block; }
+.brand .sep { color: var(--accent); }
 .topbar nav { display: flex; gap: 16px; flex: 1; }
 .topbar nav a, .user a:not(.btn) { color: var(--text); }
 .user { display: flex; align-items: center; gap: 12px; }
